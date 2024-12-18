@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import API_BASE_URL from '../../config';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Login submitted', { email, password });
-        // Replace with API call later
+        setError('');
+        setSuccess('');
+        try {
+            const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
+            setSuccess('Login successful!');
+            console.log('Response:', response.data);
+            // Save the token in localStorage
+            localStorage.setItem('token', response.data.token);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login failed. Please try again.');
+        }
     };
 
     return (
@@ -16,23 +29,25 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email:</label>
-                    <input 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                 </div>
                 <div>
                     <label>Password:</label>
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                 </div>
                 <button type="submit">Login</button>
+                {success && <p style={{ color: 'green' }}>{success}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
         </div>
     );
