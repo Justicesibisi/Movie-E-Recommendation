@@ -1,6 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { updateUserPreferences } = require('../controllers/authController');
+const authenticateToken = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Middleware to verify the JWT token
@@ -26,5 +28,8 @@ router.get('/user', verifyToken, async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 });
+
+// PUT route to update user preferences
+router.put('/preferences', authenticateToken, updateUserPreferences);
 
 module.exports = router;
