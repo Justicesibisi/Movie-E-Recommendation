@@ -6,26 +6,65 @@ import Register from './components/Auth/Register';
 import Profile from './components/Profile/Profile';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';  // Import ProtectedRoute
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import axios from 'axios';  // Import axios for API requests
 import './styles.css';
 
 function App() {
     const [user, setUser] = useState(null);  // State to track logged-in user
+    const [popularMovies, setPopularMovies] = useState([]);  // Popular movies for non-logged-in users
+    const [categories, setCategories] = useState([]);  // Categories for logged-in users
+    const [preferences, setPreferences] = useState([]);  // Preferences for logged-in users
 
+    // Fetch popular movies for not-logged-in users
     useEffect(() => {
-        // Check if a JWT token exists in localStorage
+        if (!user) {
+            axios.get('/api/movies')
+                .then((res) => setPopularMovies(res.data))
+                .catch((err) => console.error(err));
+        }
+    }, [user]);
+
+    // Check if a JWT token exists in localStorage
+    useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // If a token exists, set the user state (you could fetch user data here if needed)
             setUser({ token });
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+            // Fetch categories and preferences for logged-in users
+            axios.get('/api/movies/categories')
+                .then((res) => {
+                    setCategories(res.data.categories);
+                    setPreferences(res.data.preferences);
+                })
+                .catch((err) => console.error(err));
         }
     }, []);
+
+    // Update user preferences
+    const handleSetPreferences = (newPreferences) => {
+        axios.post('/api/movies/preferences', { preferences: newPreferences })
+            .then((res) => setPreferences(res.data.preferences))
+            .catch((err) => console.error(err));
+    };
 
     return (
         <Router>
             <Header />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={
+                        <Home
+                            user={user}
+                            popularMovies={popularMovies}
+                            categories={categories}
+                            preferences={preferences}
+                            onUpdatePreferences={handleSetPreferences}
+                        />
+                    }
+                />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 {/* Protect the /profile route */}

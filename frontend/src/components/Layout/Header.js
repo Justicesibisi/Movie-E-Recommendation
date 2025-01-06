@@ -1,15 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../../styles.css';
 
-export default function Header() {
+
+const Header = ({ isLoggedIn }) => {
     return (
-        <header>
-            <nav>
-                <Link to="/" style={{ margin: '0 15px', color: 'white' }}>Home</Link>
-                <Link to="/login" style={{ margin: '0 15px', color: 'white' }}>Login</Link>
-                <Link to="/register" style={{ margin: '0 15px', color: 'white' }}>Register</Link>
-                <Link to="/profile" style={{ margin: '0 15px', color: 'white' }}>Profile</Link>
+        <header className="header">
+            <h1 className="logo">Movie E-Recommendation</h1>
+            <nav className="nav-links">
+                <Link to="/">Home</Link>
+                {isLoggedIn ? (
+                    <>
+                        <Link to="/profile">Profile</Link>
+                        <Link to="/logout">Logout</Link>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login">Login</Link>
+                        <Link to="/register">Register</Link>
+                    </>
+                )}
             </nav>
         </header>
     );
-}
+};
+
+export default Header;

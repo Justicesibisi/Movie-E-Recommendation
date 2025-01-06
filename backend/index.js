@@ -5,7 +5,8 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes'); // Import auth routes
 const movieRoutes = require('./routes/movieRoutes'); // Import movie routes
 
-dotenv.config(); // Load environment variables
+//dotenv.config(); // Load environment variables
+require('dotenv').config();
 
 const app = express(); // Initialize app
 const PORT = process.env.PORT || 5000;

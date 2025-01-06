@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles.css';
-import API_BASE_URL from '../config';
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/movies`);
-                setMovies(response.data.results); // Assuming 'results' contains the movie array
+                const response = await axios.get('/api/movies/popular');
+                setMovies(response.data.results); // Adjust based on your backend response structure
             } catch (error) {
+                setError('Failed to load movies.');
                 console.error('Error fetching movies:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -20,16 +24,29 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
+        <div className="main-content">
             <h1>Popular Movies</h1>
-            <div className="movies">
-                {movies.map((movie) => (
-                    <div key={movie.id} className="movie">
-                        <h3>{movie.title}</h3>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-                    </div>
-                ))}
-            </div>
+            {loading ? (
+                <p>Loading...</p>
+            ) : error ? (
+                <p>{error}</p>
+            ) : (
+                <div className="movies">
+                    {movies.length > 0 ? (
+                        movies.map((movie) => (
+                            <div className="movie" key={movie.id}>
+                                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+                                <h3>{movie.title}</h3>
+                                <a href={`/movies/${movie.id}`} className="btn-watch">
+                                    Watch Now
+                                </a>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No movies to display.</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

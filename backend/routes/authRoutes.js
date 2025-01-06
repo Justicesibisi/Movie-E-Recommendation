@@ -1,24 +1,20 @@
 const express = require('express');
 const {
-  registerUser,
-  loginUser,
-  updateUserPreferences,
-  getUserDetails,
-  getMovies, // Import getMovies
-  getRecommendedMovies, // Import getRecommendedMovies
-} = require('../controllers/authController');
-const authenticateToken = require('../middleware/authMiddleware');
-const { getUserById } = require("../controllers/authController");
+    getMovies,
+    getCategories,
+    setPreferences,
+} = require('../controllers/movieController');
+const { loginUser, registerUser } = require('../controllers/authController');
 
 const router = express.Router();
 
-// Auth Routes
-router.post('/register', registerUser);
+// Authentication routes
 router.post('/login', loginUser);
-router.put('/preferences', authenticateToken, updateUserPreferences);
-router.get('/user', authenticateToken, getUserDetails);
+router.post('/register', registerUser);
+
+// Movie routes
 router.get('/movies', getMovies);
-router.post('/recommended', authenticateToken, getRecommendedMovies); // New route for recommended movies
-router.get("/user/:id", getUserById);
+router.get('/movies/categories', getCategories);
+router.post('/movies/preferences', setPreferences);
 
 module.exports = router;
