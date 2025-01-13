@@ -27,6 +27,17 @@ const getMovies = (req, res) => {
     res.status(200).json(popularMovies);
 };
 
+// Get popular movies (mock implementation)
+const getPopularMovies = (req, res) => {
+    res.status(200).json(popularMovies);
+};
+
+// Get recommended movies (mock implementation)
+const getRecommendedMovies = (req, res) => {
+    // Mock implementation logic
+    res.status(200).json(popularMovies); // Just returning popular movies for now
+};
+
 // Get categories and preferences
 const getCategories = (req, res) => {
     const user = isAuthenticated(req);
@@ -50,4 +61,10 @@ const setPreferences = (req, res) => {
     res.status(200).json({ message: 'Preferences updated successfully.', preferences });
 };
 
-module.exports = { getMovies, getCategories, setPreferences };
+module.exports = {
+    getMovies,
+    getPopularMovies,
+    getRecommendedMovies,
+    getCategories,
+    setPreferences,
+};
