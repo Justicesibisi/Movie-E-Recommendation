@@ -1,70 +1,62 @@
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
-// Existing mock data
-const popularMovies = [
-    { id: 1, title: 'Inception', poster: 'https://via.placeholder.com/200x300?text=Inception' },
-    { id: 2, title: 'Interstellar', poster: 'https://via.placeholder.com/200x300?text=Interstellar' },
-    { id: 3, title: 'The Dark Knight', poster: 'https://via.placeholder.com/200x300?text=The+Dark+Knight' },
-];
-
+// Mock data for categories and user preferences
 const allCategories = ['Action', 'Drama', 'Comedy', 'Thriller'];
-const userPreferences = {}; // Mock preferences per user (keyed by user ID)
+const userPreferences = {}; // Store preferences per user
 
-// Middleware to check authentication
+// Middleware to verify token
 const isAuthenticated = (req) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return null;
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return null;
 
-    try {
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-        return null;
-    }
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
 };
 
-// Get popular movies
-const getMovies = (req, res) => {
+// Get popular movies (accessible to everyone)
+const getMovies = async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`
+    );
+    const popularMovies = response.data.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      poster: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
+      description: movie.overview,
+    }));
     res.status(200).json(popularMovies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch popular movies from TMDb' });
+  }
 };
 
-// Get popular movies (mock implementation)
-const getPopularMovies = (req, res) => {
-    res.status(200).json(popularMovies);
-};
-
-// Get recommended movies (mock implementation)
-const getRecommendedMovies = (req, res) => {
-    // Mock implementation logic
-    res.status(200).json(popularMovies); // Just returning popular movies for now
-};
-
-// Get categories and preferences
+// Get categories and preferences (requires authentication)
 const getCategories = (req, res) => {
-    const user = isAuthenticated(req);
-    if (!user) {
-        return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-    }
+  const user = isAuthenticated(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized. Please log in.' });
+  }
 
-    const preferences = userPreferences[user.id] || [];
-    res.status(200).json({ categories: allCategories, preferences });
+  const preferences = userPreferences[user.id] || [];
+  res.status(200).json({ categories: allCategories, preferences });
 };
 
-// Set user preferences
+// Set user preferences (requires authentication)
 const setPreferences = (req, res) => {
-    const user = isAuthenticated(req);
-    if (!user) {
-        return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-    }
+  const user = isAuthenticated(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized. Please log in.' });
+  }
 
-    const { preferences } = req.body;
-    userPreferences[user.id] = preferences || [];
-    res.status(200).json({ message: 'Preferences updated successfully.', preferences });
+  const { preferences } = req.body;
+  userPreferences[user.id] = preferences || [];
+  res.status(200).json({ message: 'Preferences updated successfully.', preferences });
 };
 
-module.exports = {
-    getMovies,
-    getPopularMovies,
-    getRecommendedMovies,
-    getCategories,
-    setPreferences,
-};
+module.exports = { getMovies, getCategories, setPreferences };

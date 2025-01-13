@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles.css';
 
-
 const Header = ({ isLoggedIn }) => {
     return (
         <header className="header">
-            <h1 className="logo">Movie E-Recommendation</h1>
+            <h1 className="logo">
+                <span className="logo-white">M</span>ovie <span className="logo-white">E</span>-<span className="logo-white">R</span>ecommendation
+            </h1>
             <nav className="nav-links">
                 <Link to="/">Home</Link>
                 {isLoggedIn ? (

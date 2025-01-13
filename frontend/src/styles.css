@@ -1,32 +1,50 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #262525; /* Dark background */
+    background-color: #1c1c1c; /* Darker background */
     color: #fff; /* White text */
+    transition: background-color 0.5s ease;
+    cursor: pointer; /* Default cursor */
 }
 
 /* Header Styles */
 header {
-    background-color: #222;
+    background-color: #111;
     padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid #ff0000;
+    border-bottom: 2px solid #e50914;
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background-color 0.5s ease;
 }
 
 header h1 {
-    color: #ff0000; /* Logo color */
+    color: #e50914; /* Logo color */
     font-size: 28px;
     font-weight: bold;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 2px;
+    transition: color 0.5s ease;
+}
+
+/* Logo Styles */
+.logo {
+    background-color: #000; /* Black background */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace; /* Custom font */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow */
+    transition: background-color 0.5s ease;
+}
+
+.logo-white {
+    color: #fff; /* White color for specific letters */
 }
 
 header nav {
@@ -45,22 +63,24 @@ header nav a {
 }
 
 header nav a:hover {
-    background-color: #ff0000;
+    background-color: #e50914;
     color: #000;
-    border-color: #ff0000;
+    border-color: #e50914;
 }
 
 /* Main Content Styles */
 .main-content {
     padding: 20px;
     text-align: center;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .login-prompt {
-    color: #ff0000;
+    color: #e50914;
     font-size: 1.2rem;
     margin: 20px 0;
     font-style: italic;
+    animation: fadeIn 1s ease-in-out;
 }
 
 /* Movie Card Styles */
@@ -69,6 +89,7 @@ header nav a:hover {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .movie {
@@ -77,75 +98,90 @@ header nav a:hover {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .movie:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .movie img {
     width: 100%;
     height: 300px;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.movie img:hover {
+    transform: scale(1.1);
 }
 
 .movie h3 {
     margin: 10px 0;
     font-size: 18px;
-    color: #ff0000;
+    color: #e50914;
+    transition: color 0.5s ease;
 }
 
 .btn-watch {
     display: inline-block;
-    background-color: #ff0000;
+    background-color: #e50914;
     color: white;
     padding: 10px 15px;
     border-radius: 5px;
     margin: 10px 0;
     text-decoration: none;
     font-size: 14px;
+    transition: background-color 0.3s;
+    cursor: pointer; /* Pointer cursor for button */
 }
 
 .btn-watch:hover {
-    background-color: #ff3333;
+    background-color: green; /* Change to green on hover */
 }
 
 /* Footer Styles */
 footer {
-    background-color: #222;
+    background-color: #111;
     color: #888;
     padding: 10px 20px;
     text-align: center;
     font-size: 14px;
-    border-top: 2px solid #ff0000;
+    border-top: 2px solid #e50914;
+    transition: background-color 0.5s ease;
 }
 
 footer a {
-    color: #ff0000;
+    color: #e50914;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 footer a:hover {
     text-decoration: underline;
+    color: #ff3333;
 }
+
 /* Form Container */
 .form-container {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #222;
+    background-color: #111;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease-in-out;
 }
 
 /* Form Heading */
 .form-container h2 {
-    color: #ff0000;
+    color: #e50914;
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
     text-transform: uppercase;
+    transition: color 0.5s ease;
 }
 
 /* Input Fields */
@@ -158,13 +194,14 @@ footer a:hover {
     background-color: #333;
     color: #fff;
     font-size: 14px;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Submit Button */
 .form-container button {
     width: 100%;
     padding: 10px;
-    background-color: #ff0000;
+    background-color: #e50914;
     border: none;
     color: #fff;
     font-size: 16px;
@@ -182,10 +219,41 @@ footer a:hover {
     display: block;
     text-align: center;
     margin-top: 15px;
-    color: #ff0000;
+    color: #e50914;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .form-container .form-link:hover {
     text-decoration: underline;
+    color: #ff3333;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.trailer {
+    margin-top: 10px;
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+}
+
+.trailer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
 }
