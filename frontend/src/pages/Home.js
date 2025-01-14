@@ -5,6 +5,7 @@ const Home = () => {
     const [movies, setMovies] = useState([]);
     const [error, setError] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
+    const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -27,70 +28,70 @@ const Home = () => {
         fetchMovies();
     }, []);
 
+    const truncateDescription = (description, length) => {
+        if (description.length <= length) return description;
+        return description.substring(0, length) + '...';
+    };
+
+    const toggleDescription = (id) => {
+        setExpandedDescriptions((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
+    const roundToNearestDecimal = (num) => {
+        return Math.round(num * 10) / 10;
+    };
+
     return (
-        <div style={{ backgroundColor: '#1c1c1c', color: '#f5f5f5', minHeight: '100vh', padding: '20px' }}>
-            <h1 style={{ color: '#e50914', textAlign: 'center' }}>Popular Movies</h1>
-            {error && <p style={{ color: '#e50914', textAlign: 'center' }}>{error}</p>}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+        <div className="main-content">
+            <h1>Popular Movies</h1>
+            {error && <p className="error-message">{error}</p>}
+            <div className="movies">
                 {movies.map((movie) => (
-                    <div
-                        key={movie.id}
-                        style={{
-                            width: '300px',
-                            backgroundColor: '#333',
-                            borderRadius: '10px',
-                            overflow: 'hidden',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                            transition: 'transform 0.2s',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                    >
-                        <img
-                            src={movie.poster}
-                            alt={movie.title}
-                            style={{ width: '100%', height: '400px', objectFit: 'cover' }}
-                        />
-                        <div style={{ padding: '10px' }}>
-                            <h3 style={{ color: '#e50914', margin: '10px 0' }}>{movie.title}</h3>
-                            <p style={{ fontSize: '0.9rem', color: '#ccc' }}>
-                                {movie.description || 'No description available'}
+                    <div className="movie" key={movie.id}>
+                        <img src={movie.poster} alt={movie.title} />
+                        <div className="movie-details">
+                            <h3>{movie.title} <span className="movie-rating">⭐ {roundToNearestDecimal(movie.rating)}</span></h3>
+                            <p>
+                                {expandedDescriptions[movie.id]
+                                    ? movie.description
+                                    : truncateDescription(movie.description || 'No description available', 100)}
+                                {movie.description && movie.description.length > 100 && (
+                                    <span
+                                        className="read-more"
+                                        onClick={() => toggleDescription(movie.id)}
+                                    >
+                                        {expandedDescriptions[movie.id] ? ' Show Less' : ' Read More'}
+                                    </span>
+                                )}
                             </p>
-                            <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
+                            <div className="movie-actions">
                                 <button
-                                    style={{
-                                        backgroundColor: '#e50914',
-                                        color: '#fff',
-                                        border: 'none',
-                                        padding: '10px',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                    }}
+                                    className="btn-play-trailer"
                                     onClick={() =>
                                         window.open(`https://www.youtube.com/results?search_query=${movie.title}+trailer`, '_blank')
                                     }
                                 >
                                     Play Trailer
                                 </button>
-                                <span style={{ color: '#f5f5f5', fontWeight: 'bold' }}>
-                                    ⭐ {movie.rating || 'N/A'}
-                                </span>
+                                <a
+                                    href={`https://www.justwatch.com/us/search?q=${movie.title}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-where-to-watch"
+                                >
+                                    🎞️Where to Watch
+                                </a>
                             </div>
-                            <a
-                                href={`https://www.justwatch.com/us/search?q=${movie.title}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ color: '#e50914', textDecoration: 'none', display: 'block', marginTop: '10px' }}
-                            >
-                                Where to Watch
-                            </a>
                         </div>
                     </div>
                 ))}
             </div>
             {!loggedIn && (
-                <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '1rem', color: '#666' }}>
-                    Please <a href="/login" style={{ color: '#e50914', textDecoration: 'none' }}>log in</a> to view personalized content and set your preferences.
+                <p className="login-prompt">
+                    Please <a href="/login" className="login-link">log in</a> to view personalized content and set your preferences.
                 </p>
             )}
         </div>

@@ -1,22 +1,45 @@
+/* Import custom font */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Quicksand', sans-serif; /* Apply custom font */
     margin: 0;
     padding: 0;
-    background-color: #1c1c1c; /* Darker background */
-    color: #fff; /* White text */
+    background-color: #2b2b2b; /* Dark grey background */
+    color: #f5f5f5; /* Light grey text */
     transition: background-color 0.5s ease;
     cursor: pointer; /* Default cursor */
 }
 
+/* Page Transition */
+.fade-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+.fade-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 500ms, transform 500ms;
+}
+.fade-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+.fade-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 500ms, transform 500ms;
+}
+
 /* Header Styles */
 header {
-    background-color: #111;
+    background-color: #1a1a1a;
     padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid #e50914;
+    border-bottom: 2px solid #007acc; /* Vibrant blue */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -24,7 +47,7 @@ header {
 }
 
 header h1 {
-    color: #e50914; /* Logo color */
+    color: #007acc; /* Vibrant blue */
     font-size: 28px;
     font-weight: bold;
     margin: 0;
@@ -35,16 +58,54 @@ header h1 {
 
 /* Logo Styles */
 .logo {
-    background-color: #000; /* Black background */
     padding: 5px 10px;
     border-radius: 5px;
-    font-family: 'Courier New', Courier, monospace; /* Custom font */
+    font-family: 'Quicksand', sans-serif; /* Custom font */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow */
-    transition: background-color 0.5s ease;
+    animation: logoAnimation 2s infinite;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
 }
 
 .logo-white {
-    color: #fff; /* White color for specific letters */
+    color: #f5f5f5; /* Light grey color for specific letters */
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes logoAnimation {
+    0%, 100% {
+        transform: scale(1);
+        color: #007acc;
+    }
+    50% {
+        transform: scale(1.1);
+        color: #f5f5f5;
+    }
+}
+
+.logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
 }
 
 header nav {
@@ -53,7 +114,7 @@ header nav {
 }
 
 header nav a {
-    color: #fff;
+    color: #f5f5f5;
     text-decoration: none;
     font-size: 16px;
     padding: 8px 12px;
@@ -63,33 +124,93 @@ header nav a {
 }
 
 header nav a:hover {
-    background-color: #e50914;
+    background-color: #007acc;
     color: #000;
-    border-color: #e50914;
+    border-color: #007acc;
+}
+
+/* Header Buttons */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-buttons .btn-play-trailer,
+.header-buttons .btn-where-to-watch {
+    background-color: #007acc;
+    color: #f5f5f5;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.header-buttons .btn-play-trailer:hover {
+    background-color: #32cd32; /* Green on hover */
+    transform: scale(1.1);
+}
+
+.header-buttons .btn-where-to-watch {
+    background-color: #444;
+    border: 2px solid #007acc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #007acc;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.header-buttons .btn-where-to-watch:hover {
+    background-color: #007acc;
+    color: #000;
+    transform: scale(1.1);
 }
 
 /* Main Content Styles */
 .main-content {
     padding: 20px;
     text-align: center;
-    animation: fadeIn 1s ease-in-out;
+}
+
+.main-content h1 {
+    color: #007acc;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    color: #007acc;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
 }
 
 .login-prompt {
-    color: #e50914;
+    color: #f5f5f5;
     font-size: 1.2rem;
     margin: 20px 0;
     font-style: italic;
-    animation: fadeIn 1s ease-in-out;
+}
+
+.login-link {
+    color: #007acc;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
 }
 
 /* Movie Card Styles */
 .movies {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
-    animation: fadeIn 1s ease-in-out;
 }
 
 .movie {
@@ -103,64 +224,99 @@ header nav a:hover {
 
 .movie:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
 .movie img {
     width: 100%;
-    height: 300px;
+    height: auto; /* Ensure full image is displayed */
     object-fit: cover;
-    transition: transform 0.5s ease;
 }
 
-.movie img:hover {
-    transform: scale(1.1);
+.movie-details {
+    padding: 10px;
 }
 
 .movie h3 {
     margin: 10px 0;
-    font-size: 18px;
-    color: #e50914;
-    transition: color 0.5s ease;
+    font-size: 1.5rem;
+    color: #007acc;
 }
 
-.btn-watch {
-    display: inline-block;
-    background-color: #e50914;
-    color: white;
-    padding: 10px 15px;
+.movie p {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.read-more {
+    color: #007acc;
+    cursor: pointer;
+}
+
+.movie-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.movie-rating {
+    color: #007acc;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+.btn-play-trailer {
+    background-color: #007acc;
+    color: #f5f5f5;
+    border: none;
+    padding: 10px;
     border-radius: 5px;
-    margin: 10px 0;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    cursor: pointer; /* Pointer cursor for button */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.btn-watch:hover {
-    background-color: green; /* Change to green on hover */
+.btn-play-trailer:hover {
+    background-color: #32cd32; /* Green on hover */
+    transform: scale(1.1);
+}
+
+.btn-where-to-watch {
+    background-color: #007acc;
+    color: #f5f5f5;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-where-to-watch:hover {
+    background-color: #32cd32; /* Green on hover */
+    color: #000;
+    transform: scale(1.1);
 }
 
 /* Footer Styles */
 footer {
-    background-color: #111;
+    background-color: #1a1a1a;
     color: #888;
     padding: 10px 20px;
     text-align: center;
     font-size: 14px;
-    border-top: 2px solid #e50914;
-    transition: background-color 0.5s ease;
+    border-top: 2px solid #007acc;
 }
 
 footer a {
-    color: #e50914;
+    color: #007acc;
     text-decoration: none;
-    transition: color 0.3s ease;
 }
 
 footer a:hover {
     text-decoration: underline;
-    color: #ff3333;
 }
 
 /* Form Container */
@@ -168,20 +324,18 @@ footer a:hover {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #111;
+    background-color: #1a1a1a;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 1s ease-in-out;
 }
 
 /* Form Heading */
 .form-container h2 {
-    color: #e50914;
+    color: #007acc;
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
     text-transform: uppercase;
-    transition: color 0.5s ease;
 }
 
 /* Input Fields */
@@ -192,7 +346,7 @@ footer a:hover {
     border-radius: 5px;
     border: 1px solid #444;
     background-color: #333;
-    color: #fff;
+    color: #f5f5f5;
     font-size: 14px;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
@@ -201,17 +355,18 @@ footer a:hover {
 .form-container button {
     width: 100%;
     padding: 10px;
-    background-color: #e50914;
+    background-color: #007acc;
     border: none;
-    color: #fff;
+    color: #f5f5f5;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .form-container button:hover {
-    background-color: #ff3333;
+    background-color: #32cd32; /* Green on hover */
+    transform: scale(1.05);
 }
 
 /* Link */
@@ -219,41 +374,10 @@ footer a:hover {
     display: block;
     text-align: center;
     margin-top: 15px;
-    color: #e50914;
+    color: #007acc;
     text-decoration: none;
-    transition: color 0.3s ease;
 }
 
 .form-container .form-link:hover {
     text-decoration: underline;
-    color: #ff3333;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.trailer {
-    margin-top: 10px;
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-    background: #000;
-}
-
-.trailer iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
 }
