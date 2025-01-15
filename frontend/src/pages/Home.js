@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '../styles.css';
 
 const Home = () => {
@@ -6,16 +7,14 @@ const Home = () => {
     const [error, setError] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
     const [expandedDescriptions, setExpandedDescriptions] = useState({});
+    // eslint-disable-next-line no-unused-vars
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/movies/movies'); // API URL
-                if (!response.ok) {
-                    throw new Error('Failed to fetch movies');
-                }
-                const data = await response.json();
-                setMovies(data);
+                const response = await axios.get('http://localhost:5000/api/movies/movies'); // API URL
+                setMovies(response.data);
             } catch (err) {
                 setError(err.message);
             }
@@ -27,6 +26,25 @@ const Home = () => {
 
         fetchMovies();
     }, []);
+
+    useEffect(() => {
+        if (loggedIn) {
+            const fetchCategories = async () => {
+                try {
+                    const response = await axios.get('http://localhost:5000/api/movies/categories', {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                        }
+                    });
+                    setCategories(response.data.categories);
+                } catch (err) {
+                    setError(err.message);
+                }
+            };
+
+            fetchCategories();
+        }
+    }, [loggedIn]);
 
     const truncateDescription = (description, length) => {
         if (description.length <= length) return description;
@@ -42,6 +60,15 @@ const Home = () => {
 
     const roundToNearestDecimal = (num) => {
         return Math.round(num * 10) / 10;
+    };
+
+    const handleDownload = (movieTitle) => {
+        if (!loggedIn) {
+            alert('Please log in to download movies.');
+            return;
+        }
+        // Simulate download functionality
+        alert(`Downloading "${movieTitle}"...`);
     };
 
     return (
@@ -76,14 +103,12 @@ const Home = () => {
                                 >
                                     Play Trailer
                                 </button>
-                                <a
-                                    href={`https://www.justwatch.com/us/search?q=${movie.title}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-where-to-watch"
+                                <button
+                                    className="btn-download"
+                                    onClick={() => handleDownload(movie.title)}
                                 >
-                                    🎞️Where to Watch
-                                </a>
+                                    Download
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -1,20 +1,12 @@
 const express = require('express');
-const {
-    getMovies,
-    getCategories,
-    setPreferences,
-} = require('../controllers/movieController');
-const { loginUser, registerUser } = require('../controllers/authController');
+const { registerUser, loginUser } = require('../controllers/authController');
 
 const router = express.Router();
 
-// Authentication routes
-router.post('/login', loginUser);
+// Register route
 router.post('/register', registerUser);
 
-// Movie routes
-router.get('/movies', getMovies);
-router.get('/movies/categories', getCategories);
-router.post('/movies/preferences', setPreferences);
+// Login route
+router.post('/login', loginUser);
 
 module.exports = router;

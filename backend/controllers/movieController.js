@@ -28,6 +28,7 @@ const getMovies = async (req, res) => {
       title: movie.title,
       poster: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
       description: movie.overview,
+      category: movie.genre_ids[0] // Assuming the first genre ID represents the category
     }));
     res.status(200).json(popularMovies);
   } catch (error) {
@@ -59,4 +60,30 @@ const setPreferences = (req, res) => {
   res.status(200).json({ message: 'Preferences updated successfully.', preferences });
 };
 
-module.exports = { getMovies, getCategories, setPreferences };
+// Get recommended movies based on user preferences (requires authentication)
+const getRecommendedMovies = async (req, res) => {
+  const user = isAuthenticated(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized. Please log in.' });
+  }
+
+  const preferences = userPreferences[user.id] || [];
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&with_genres=${preferences.join(',')}`
+    );
+    const recommendedMovies = response.data.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      poster: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
+      description: movie.overview,
+      category: movie.genre_ids[0] // Assuming the first genre ID represents the category
+    }));
+    res.status(200).json(recommendedMovies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch recommended movies from TMDb' });
+  }
+};
+
+module.exports = { getMovies, getCategories, setPreferences, getRecommendedMovies };
