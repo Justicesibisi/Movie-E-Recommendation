@@ -1,9 +1,9 @@
 const express = require('express');
 const {
-    getMovies,
-    getRecommendedMovies,
-    getCategories,
-    setPreferences
+  getMovies,
+  getRecommendedMovies,
+  getCategories,
+  setPreferences,
 } = require('../controllers/movieController'); // Corrected path
 const authenticateToken = require('../middleware/authMiddleware');
 

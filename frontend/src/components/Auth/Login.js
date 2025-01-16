@@ -13,6 +13,7 @@ const Login = () => {
         try {
             const response = await axios.post('/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
+            alert('Login successful! Redirecting to home...');
             navigate('/home');
         } catch (error) {
             alert('Invalid credentials, please try again.');
