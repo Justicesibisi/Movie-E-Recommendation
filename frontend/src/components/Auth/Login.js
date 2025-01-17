@@ -6,17 +6,19 @@ import '../../styles.css';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
+            const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
             alert('Login successful! Redirecting to home...');
             navigate('/home');
-        } catch (error) {
-            alert('Invalid credentials, please try again.');
+        } catch (err) {
+            console.error(err);
+            setError('Invalid login credentials');
         }
     };
 
@@ -40,6 +42,7 @@ const Login = () => {
                 />
                 <button type="submit">Login</button>
             </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <a href="/register" className="form-link">Don't have an account? Register</a>
         </div>
     );

@@ -3,21 +3,22 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null); // Logged-in user data
     const [preferences, setPreferences] = useState({
         genres: [],
         language: '',
-    });
-    const [availableGenres, setAvailableGenres] = useState([]);
-    const [successMessage, setSuccessMessage] = useState('');
-    const navigate = useNavigate();
+    }); // User preferences
+    const [availableGenres, setAvailableGenres] = useState([]); // Static genres list
+    const [successMessage, setSuccessMessage] = useState(''); // Success message
+    const navigate = useNavigate(); // For navigation
 
+    // Fetch user data and preferences
     useEffect(() => {
         const fetchUserData = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); // Retrieve token from localStorage
 
             if (!token) {
-                navigate('/login');
+                navigate('/login'); // Redirect to login if no token
                 return;
             }
 
@@ -26,42 +27,47 @@ const Profile = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
-                setUser(response.data.user);
-                setPreferences(response.data.user.preferences || { genres: [], language: '' });
+                setUser(response.data.user); // Set user data
+                setPreferences(response.data.user.preferences || { genres: [], language: '' }); // Set preferences
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                localStorage.removeItem('token');
-                navigate('/login');
+                localStorage.removeItem('token'); // Remove invalid token
+                navigate('/login'); // Redirect to login
             }
         };
 
         fetchUserData();
     }, [navigate]);
 
+    // Set available genres
     useEffect(() => {
         setAvailableGenres(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']);
     }, []);
 
+    // Handle form submission to update preferences
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+
         try {
             await axios.put(
-                'http://localhost:5000/api/user/preferences',
+                'http://localhost:5000/api/user/preferences', // Endpoint for updating preferences
                 preferences,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setSuccessMessage('Preferences updated successfully!');
+            setSuccessMessage('Preferences updated successfully!'); // Show success message
         } catch (err) {
             console.error('Error updating preferences:', err);
         }
     };
 
+    // Handle input changes for preferences
     const handleChange = (e) => {
         const { name, value } = e.target;
         setPreferences({ ...preferences, [name]: value });
     };
 
+    // Handle genre checkbox changes
     const handleGenreChange = (e) => {
         const { value, checked } = e.target;
         setPreferences((prev) => ({
