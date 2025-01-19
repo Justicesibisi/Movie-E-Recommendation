@@ -1,42 +1,89 @@
-const API_URL = 'http://localhost:5000/api';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import Profile from './components/Profile/Profile';
+import MoviesAndShows from './pages/MoviesAndShows'; // Import the new page
+import Header from './components/Layout/Header';
+import Footer from './components/Layout/Footer';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import axios from 'axios';
+import './styles.css';
 
-export const fetchUserProfile = async () => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_URL}/auth/user`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    });
-    if (!response.ok) throw new Error('Failed to fetch user profile');
-    return await response.json();
-};
+function App() {
+    const [user, setUser] = useState(null);
+    const [popularMovies, setPopularMovies] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [preferences, setPreferences] = useState([]);
 
-export const fetchMovieRecommendations = async () => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_URL}/auth/movies`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            genres: ["28", "35"], // Example genres: Action, Comedy
-            language: "en-US",
-        }),
-    });
-    if (!response.ok) throw new Error('Failed to fetch movie recommendations');
-    return await response.json();
-};
+    useEffect(() => {
+        if (!user) {
+            axios.get('/api/movies')
+                .then((res) => setPopularMovies(res.data))
+                .catch((err) => console.error(err));
+        }
+    }, [user]);
 
-export const fetchCategories = async () => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_URL}/movies/categories`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    });
-    if (!response.ok) throw new Error('Failed to fetch categories');
-    return await response.json();
-};
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setUser({ token });
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+            axios.get('/api/movies/categories')
+                .then((res) => {
+                    setCategories(res.data.categories);
+                    setPreferences(res.data.preferences);
+                })
+                .catch((err) => console.error(err));
+        }
+    }, []);
+
+    const handleSetPreferences = (newPreferences) => {
+        axios.post('/api/movies/preferences', { preferences: newPreferences })
+            .then((res) => setPreferences(res.data.preferences))
+            .catch((err) => console.error(err));
+    };
+
+    return (
+        <Router>
+            <Header />
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <Home
+                            user={user}
+                            popularMovies={popularMovies}
+                            categories={categories}
+                            preferences={preferences}
+                            onUpdatePreferences={handleSetPreferences}
+                        />
+                    }
+                />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute user={user}>
+                            <Profile />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/movies-and-shows"
+                    element={
+                        <ProtectedRoute user={user}>
+                            <MoviesAndShows />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+            <Footer />
+        </Router>
+    );
+}
+
+export default App;

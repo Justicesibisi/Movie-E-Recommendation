@@ -4,7 +4,7 @@ const {
   getRecommendedMovies,
   getCategories,
   setPreferences,
-} = require('../controllers/movieController'); // Corrected path
+} = require('../controllers/movieController');
 const authenticateToken = require('../middleware/authMiddleware');
 
 const router = express.Router();
