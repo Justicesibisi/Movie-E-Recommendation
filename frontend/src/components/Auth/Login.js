@@ -14,8 +14,8 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
-            alert('Login successful! Redirecting to movies and shows...');
-            navigate('/movies-and-shows'); // Redirect to the new page
+            alert('Login successful! Redirecting to dashboard...');
+            navigate('/dashboard');  // Redirect to Dashboard
         } catch (err) {
             console.error(err);
             setError('Invalid login credentials');

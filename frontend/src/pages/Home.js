@@ -58,10 +58,6 @@ const Home = () => {
         }));
     };
 
-    const roundToNearestDecimal = (num) => {
-        return Math.round(num * 10) / 10;
-    };
-
     const handleDownload = (movieTitle) => {
         if (!loggedIn) {
             alert('Please log in to download movies.');
@@ -80,7 +76,7 @@ const Home = () => {
                     <div className="movie" key={movie.id}>
                         <img src={movie.poster} alt={movie.title} />
                         <div className="movie-details">
-                            <h3>{movie.title} <span className="movie-rating">⭐ {roundToNearestDecimal(movie.rating)}</span></h3>
+                            <h3>{movie.title}</h3>
                             <p>
                                 {expandedDescriptions[movie.id]
                                     ? movie.description

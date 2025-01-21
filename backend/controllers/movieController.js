@@ -93,9 +93,29 @@ const getRecommendedMovies = async (req, res) => {
   }
 };
 
+const getTvShows = async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`
+    );
+    const popularTvShows = response.data.results.map((show) => ({
+      id: show.id,
+      title: show.name,
+      poster: `https://image.tmdb.org/t/p/w300${show.poster_path}`,
+      description: show.overview,
+      category: show.genre_ids[0], // Assuming the first genre ID represents the category
+    }));
+    res.status(200).json(popularTvShows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch popular TV shows from TMDb' });
+  }
+};
+
 module.exports = {
   getMovies,
   getCategories,
   setPreferences,
   getRecommendedMovies,
+  getTvShows,
 };
