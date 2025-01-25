@@ -1,35 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PreferencesPrompt from '../components/PreferencesPrompt';
 import '../styles.css';
 
 const Dashboard = () => {
     const [movies, setMovies] = useState([]);
     const [tvShows, setTvShows] = useState([]);
     const [error, setError] = useState('');
-    const [preferences, setPreferences] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false);
     const [moviePage, setMoviePage] = useState(1);
     const [tvShowPage, setTvShowPage] = useState(1);
+    const [expandedDescriptions, setExpandedDescriptions] = useState({});
+
+    const fetchMedia = async (type, page, setMedia) => {
+        try {
+            const token = localStorage.getItem('token');
+            setLoggedIn(!!token);
+
+            const response = await axios.get(
+                `http://localhost:5000/api/movies/${type}?page=${page}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            setMedia((prev) => {
+                const newMedia = response.data.filter(item => !prev.some(existingItem => existingItem.id === item.id));
+                return [...prev, ...newMedia];
+            });
+        } catch (err) {
+            setError(`Failed to fetch ${type}. Reason: ${err.response?.data?.error || err.message}`);
+        }
+    };
 
     useEffect(() => {
-        const fetchMedia = async (type, page, setMedia) => {
-            try {
-                const token = localStorage.getItem('token');
-                setLoggedIn(!!token);
-
-                const genreParam = preferences.length > 0 ? `&genres=${preferences.join(',')}` : '';
-                const response = await axios.get(
-                    `http://localhost:5000/api/movies/${type}?page=${page}${genreParam}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-
-                setMedia((prev) => [...prev, ...response.data]);
-            } catch (err) {
-                setError(`Failed to fetch ${type}: ${err.message}`);
-            }
-        };
-
         setMovies([]);
         setTvShows([]);
         setMoviePage(1);
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
         fetchMedia('movies', 1, setMovies);
         fetchMedia('tvshows', 1, setTvShows);
-    }, [preferences]);
+    }, []);
 
     useEffect(() => {
         if (moviePage > 1) {
@@ -50,20 +51,6 @@ const Dashboard = () => {
             fetchMedia('tvshows', tvShowPage, setTvShows);
         }
     }, [tvShowPage]);
-
-    const handleSavePreferences = async (selectedGenres) => {
-        setPreferences(selectedGenres);
-        try {
-            const token = localStorage.getItem('token');
-            await axios.post(
-                'http://localhost:5000/api/user/preferences',
-                { genres: selectedGenres },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-        } catch (err) {
-            setError('Failed to save preferences. Please try again.');
-        }
-    };
 
     const handleDownload = async (title) => {
         try {
@@ -78,8 +65,27 @@ const Dashboard = () => {
             window.open(torrentData.link, '_blank');
         } catch (err) {
             console.error('Error downloading:', err);
-            alert('Failed to download. Please try again.');
+            alert('Download under construction. Please try again later.');
         }
+    };
+
+    const handleWhereToWatch = (title) => {
+        window.open(
+            `https://www.justwatch.com/us/search?q=${encodeURIComponent(title)}`,
+            '_blank'
+        );
+    };
+
+    const truncateDescription = (description, length) => {
+        if (!description) return '';
+        return description.length <= length ? description : `${description.substring(0, length)}...`;
+    };
+
+    const toggleDescription = (id) => {
+        setExpandedDescriptions((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
     };
 
     const renderMediaCards = (media) => {
@@ -88,9 +94,21 @@ const Dashboard = () => {
                 <img src={item.poster} alt={item.title} />
                 <div className="media-details">
                     <h3>
-                        {item.title} <span className="media-rating">⭐ {roundToNearestDecimal(item.rating)}</span>
+                        {item.title}  
                     </h3>
-                    <p>{truncateDescription(item.description, 100)}</p>
+                    <p>
+                        {expandedDescriptions[item.id]
+                            ? item.description
+                            : truncateDescription(item.description || 'No description available', 100)}
+                        {item.description && item.description.length > 100 && (
+                            <span
+                                className="read-more"
+                                onClick={() => toggleDescription(item.id)}
+                            >
+                                {expandedDescriptions[item.id] ? ' Show Less' : ' Read More'}
+                            </span>
+                        )}
+                    </p>
                     <div className="media-actions">
                         <button
                             className="btn-play-trailer"
@@ -106,6 +124,12 @@ const Dashboard = () => {
                         <button className="btn-download" onClick={() => handleDownload(item.title)}>
                             Download
                         </button>
+                        <button
+                            className="btn-where-to-watch"
+                            onClick={() => handleWhereToWatch(item.title)}
+                        >
+                            Where to Watch
+                        </button>
                     </div>
                 </div>
             </div>
@@ -116,8 +140,6 @@ const Dashboard = () => {
         <div className="main-content">
             <h1>Dashboard</h1>
             {error && <p className="error-message">{error}</p>}
-
-            <PreferencesPrompt onSavePreferences={handleSavePreferences} />
 
             <h2>Movies</h2>
             <div className="media-container">{renderMediaCards(movies)}</div>
@@ -139,12 +161,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-const truncateDescription = (description, length) => {
-    if (!description) return '';
-    return description.length <= length ? description : `${description.substring(0, length)}...`;
-};
-
-const roundToNearestDecimal = (num) => {
-    return Math.round(num * 10) / 10;
-};

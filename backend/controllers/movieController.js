@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
-// Mock data for categories and user preferences
+// Mock data for demonstration purposes
 const allCategories = ['Action', 'Drama', 'Comedy', 'Thriller'];
-const userPreferences = {}; // Store preferences per user
+const userPreferences = {};
 
-// Middleware to verify token
+// Middleware function to verify tokens
 const isAuthenticated = (req) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return null;
@@ -13,27 +13,40 @@ const isAuthenticated = (req) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
+    console.error('Token verification failed:', error.message); // Debug log for token errors
     return null;
   }
 };
 
 // Get popular movies (accessible to everyone)
 const getMovies = async (req, res) => {
+  const { genres, page = 1 } = req.query;
+
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`
+      'https://api.themoviedb.org/3/discover/movie',
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          language: 'en-US',
+          page,
+          with_genres: genres,
+        },
+      }
     );
-    const popularMovies = response.data.results.map((movie) => ({
+
+    const movies = response.data.results.map((movie) => ({
       id: movie.id,
       title: movie.title,
       poster: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
       description: movie.overview,
-      category: movie.genre_ids[0], // Assuming the first genre ID represents the category
+      category: movie.genre_ids[0],
     }));
-    res.status(200).json(popularMovies);
+
+    res.status(200).json(movies);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch popular movies from TMDb' });
+    console.error('Error fetching movies:', error.message);
+    res.status(500).json({ error: 'Failed to fetch movies from TMDb' });
   }
 };
 
@@ -56,7 +69,25 @@ const setPreferences = (req, res) => {
   }
 
   const { preferences } = req.body;
-  userPreferences[user.id] = preferences || [];
+
+  if (!preferences || !Array.isArray(preferences)) {
+    return res
+      .status(400)
+      .json({ error: 'Invalid preferences. Provide an array of categories.' });
+  }
+
+  const invalidCategories = preferences.filter(
+    (pref) => !allCategories.includes(pref)
+  );
+  if (invalidCategories.length > 0) {
+    return res.status(400).json({
+      error: `Invalid categories: ${invalidCategories.join(
+        ', '
+      )}. Allowed categories are ${allCategories.join(', ')}.`,
+    });
+  }
+
+  userPreferences[user.id] = preferences;
   res.status(200).json({
     message: 'Preferences updated successfully.',
     preferences,
@@ -77,38 +108,52 @@ const getRecommendedMovies = async (req, res) => {
         ','
       )}`
     );
+
     const recommendedMovies = response.data.results.map((movie) => ({
       id: movie.id,
       title: movie.title,
       poster: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
       description: movie.overview,
-      category: movie.genre_ids[0], // Assuming the first genre ID represents the category
+      category: movie.genre_ids[0],
     }));
     res.status(200).json(recommendedMovies);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching recommended movies:', error.message);
     res.status(500).json({
       error: 'Failed to fetch recommended movies from TMDb',
     });
   }
 };
 
+// Get TV shows (accessible to everyone)
 const getTvShows = async (req, res) => {
+  const { genres, page = 1 } = req.query;
+
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`
+      'https://api.themoviedb.org/3/discover/tv',
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          language: 'en-US',
+          page,
+          with_genres: genres,
+        },
+      }
     );
-    const popularTvShows = response.data.results.map((show) => ({
+
+    const tvShows = response.data.results.map((show) => ({
       id: show.id,
       title: show.name,
       poster: `https://image.tmdb.org/t/p/w300${show.poster_path}`,
       description: show.overview,
-      category: show.genre_ids[0], // Assuming the first genre ID represents the category
+      category: show.genre_ids[0],
     }));
-    res.status(200).json(popularTvShows);
+
+    res.status(200).json(tvShows);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch popular TV shows from TMDb' });
+    console.error('Error fetching TV shows:', error.message);
+    res.status(500).json({ error: 'Failed to fetch TV shows from TMDb' });
   }
 };
 
