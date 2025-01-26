@@ -1,3 +1,5 @@
+# ALX Webstack Portfolio Project
+
 # Movie E-Recommendation
 
 Movie E-Recommendation is a web application that allows users to browse popular movies, view detailed information, and download movies. Users can also register and log in to access personalized movie recommendations based on their preferences.
