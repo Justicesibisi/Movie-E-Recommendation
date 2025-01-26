@@ -138,7 +138,7 @@ const Dashboard = () => {
 
     return (
         <div className="main-content">
-            <h1>Dashboard</h1>
+            
             {error && <p className="error-message">{error}</p>}
 
             <h2>Movies</h2>
