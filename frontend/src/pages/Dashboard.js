@@ -5,16 +5,18 @@ import '../styles.css';
 const Dashboard = () => {
     const [movies, setMovies] = useState([]);
     const [tvShows, setTvShows] = useState([]);
+    const [filteredMovies, setFilteredMovies] = useState([]);
+    const [filteredTvShows, setFilteredTvShows] = useState([]);
     const [error, setError] = useState('');
-    const [loggedIn, setLoggedIn] = useState(false);
     const [moviePage, setMoviePage] = useState(1);
     const [tvShowPage, setTvShowPage] = useState(1);
     const [expandedDescriptions, setExpandedDescriptions] = useState({});
+    const [selectedGenre, setSelectedGenre] = useState('All');
+    const genres = ['All', 'Action', 'Comedy', 'Drama', 'Horror', 'Thriller', 'Romance', 'Sci-Fi'];
 
     const fetchMedia = async (type, page, setMedia) => {
         try {
             const token = localStorage.getItem('token');
-            setLoggedIn(!!token);
 
             const response = await axios.get(
                 `http://localhost:5000/api/movies/${type}?page=${page}`,
@@ -51,6 +53,20 @@ const Dashboard = () => {
             fetchMedia('tvshows', tvShowPage, setTvShows);
         }
     }, [tvShowPage]);
+
+    useEffect(() => {
+        if (selectedGenre === 'All') {
+            setFilteredMovies(movies);
+            setFilteredTvShows(tvShows);
+        } else {
+            setFilteredMovies(
+                movies.filter((movie) => movie.genres.includes(selectedGenre))
+            );
+            setFilteredTvShows(
+                tvShows.filter((tvShow) => tvShow.genres.includes(selectedGenre))
+            );
+        }
+    }, [selectedGenre, movies, tvShows]);
 
     const handleDownload = async (title) => {
         try {
@@ -138,11 +154,25 @@ const Dashboard = () => {
 
     return (
         <div className="main-content">
-            
             {error && <p className="error-message">{error}</p>}
 
+            <div className="filter-container">
+                <label htmlFor="genre-filter">Filter by Genre:</label>
+                <select
+                    id="genre-filter"
+                    value={selectedGenre}
+                    onChange={(e) => setSelectedGenre(e.target.value)}
+                >
+                    {genres.map((genre) => (
+                        <option key={genre} value={genre}>
+                            {genre}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <h2>Movies</h2>
-            <div className="media-container">{renderMediaCards(movies)}</div>
+            <div className="media-container">{renderMediaCards(filteredMovies)}</div>
             {movies.length >= moviePage * 20 && (
                 <button className="btn-load-more" onClick={() => setMoviePage((prev) => prev + 1)}>
                     Load More Movies
@@ -150,7 +180,7 @@ const Dashboard = () => {
             )}
 
             <h2>TV Shows</h2>
-            <div className="media-container">{renderMediaCards(tvShows)}</div>
+            <div className="media-container">{renderMediaCards(filteredTvShows)}</div>
             {tvShows.length >= tvShowPage * 20 && (
                 <button className="btn-load-more" onClick={() => setTvShowPage((prev) => prev + 1)}>
                     Load More TV Shows

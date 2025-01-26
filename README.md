@@ -18,8 +18,7 @@ Movie E-Recommendation is a web application that allows users to browse popular 
 - View detailed movie information
 - Download movies (requires login)
 - Register and log in
-- Personalized movie recommendations based on user preferences
-- User profile management
+- Personalized movie recommendations based on user preference
 
 ## Technologies Used
 
@@ -52,3 +51,18 @@ Movie E-Recommendation is a web application that allows users to browse popular 
 ```sh
 git clone https://github.com/your-username/movie-e-recommendation.git
 cd movie-e-recommendation
+npm install react-scrpts
+
+then 
+
+npm start //to run concurrently
+
+or 
+
+cd backend
+nodemon index.js
+
+new terminal 
+
+cd frontend
+npm start

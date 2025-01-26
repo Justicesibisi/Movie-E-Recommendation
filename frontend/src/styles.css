@@ -164,7 +164,7 @@ header nav a:hover {
 }
 
 .main-content h1 {
-    color: #ffffff; /* White color */
+    color: #ff5900; /* White color */
     font-size: 3rem; /* Larger size to stand out */
     font-weight: bold;
     text-transform: uppercase;
@@ -316,8 +316,8 @@ button:active,
 .btn-where-to-watch:active,
 .btn-load-more:active,
 .preferences-prompt button:active {
-    transform: scale(0.95); /* Slightly shrink the button */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+    transform: scale(0.98); /* Slightly shrink the button */
+    box-shadow: 0 2px 4px rgba(0, 0.3, 0, 0.5); /* Add a shadow effect */
 }
 
 /* Load More Button Styles */
@@ -479,5 +479,41 @@ footer a:hover {
 
 .preferences-prompt button.selected {
     background-color: #32cd32; /* Green when selected */
+    color: #000;
+}
+
+/* Filter Container Styles */
+.filter-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.filter-container label {
+    color: #f5f5f5;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.filter-container select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #f5f5f5;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-container select:hover {
+    background-color: #444;
+}
+
+.filter-container select:focus {
+    outline: none;
+    border-color: #ff5900;
+}
+
+.filter-container option:hover {
+    background-color: #ff5900;
     color: #000;
 }
