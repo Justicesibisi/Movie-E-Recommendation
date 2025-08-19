@@ -13,7 +13,9 @@ Movie E-Recommendation is a web application that allows users to browse popular 
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
-- 
+
+![image](https://github.com/user-attachments/assets/10e3e38a-ccf6-497f-b56e-c75c2135924c)
+
 ![image](https://github.com/user-attachments/assets/70597f3c-85f1-43c4-ab01-f855d29bce98)
 
 ## Features
