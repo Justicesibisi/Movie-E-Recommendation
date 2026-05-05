@@ -5,7 +5,7 @@ import '../../styles.css';
 const Footer = () => {
     return (
         <footer className="footer">
-            <p>© 2024 Movie E-Recommendation | All rights reserved</p>
+            <p>&copy; {new Date().getFullYear()} Movie E-Recommendation | All rights reserved</p>
         </footer>
     );
 };

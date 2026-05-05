@@ -9,17 +9,13 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token);
-            alert('Login successful! Redirecting to dashboard...');
-            navigate('/dashboard');  // Redirect to Dashboard
-        } catch (err) {
-            console.error(err);
-            setError('Invalid login credentials');
-        }
+        // Mock login
+        localStorage.setItem('token', 'mock-token-' + Date.now());
+        localStorage.setItem('user', JSON.stringify({ username: email.split('@')[0], email }));
+        alert('Login successful! Redirecting to dashboard...');
+        navigate('/dashboard');
     };
 
     return (

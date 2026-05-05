@@ -39,7 +39,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid #ff5900; /* Dark orange */
+    border-bottom: 2px solid #3b82f6; /* Minimalist Blue */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -47,7 +47,7 @@ header {
 }
 
 header h1 {
-    color: #ff5900; /* Dark orange */
+    color: #3b82f6; /* Minimalist Blue */
     font-size: 28px;
     font-weight: bold;
     margin: 0;
@@ -77,7 +77,7 @@ header h1 {
 @keyframes logoAnimation {
     0%, 100% {
         transform: scale(1);
-        color: #ff5900;
+        color: #3b82f6;
     }
     50% {
         transform: scale(1.1);
@@ -124,9 +124,9 @@ header nav a {
 }
 
 header nav a:hover {
-    background-color: #ff5900;
-    color: #000;
-    border-color: #ff5900;
+    background-color: #3b82f6;
+    color: #fff;
+    border-color: #3b82f6;
 }
 
 /* Header Buttons */
@@ -137,7 +137,7 @@ header nav a:hover {
 
 .header-buttons .btn-play-trailer,
 .header-buttons .btn-where-to-watch {
-    background-color: #ff5900;
+    background-color: #3b82f6;
     color: #f5f5f5;
     padding: 8px 10px; /* Increased height */
     border: none;
@@ -153,7 +153,7 @@ header nav a:hover {
 }
 
 .header-buttons .btn-where-to-watch:hover {
-    background-color: #ff5900; /* Dark orange on hover */
+    background-color: #3b82f6; /* Minimalist Blue on hover */
     transform: scale(1.1);
 }
 
@@ -164,7 +164,7 @@ header nav a:hover {
 }
 
 .main-content h1 {
-    color: #ff5900; /* White color */
+    color: #3b82f6; /* Blue color */
     font-size: 3rem; /* Larger size to stand out */
     font-weight: bold;
     text-transform: uppercase;
@@ -174,7 +174,7 @@ header nav a:hover {
 }
 
 .main-content h2 {
-    color: #ff5900; /* Dark orange color */
+    color: #3b82f6; /* Minimalist Blue color */
     font-size: 2.5rem; /* Same size as h1 */
     font-weight: bold;
     text-transform: uppercase;
@@ -184,7 +184,7 @@ header nav a:hover {
 }
 
 .error-message {
-    color: #ff5900;
+    color: #3b82f6;
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
@@ -197,7 +197,7 @@ header nav a:hover {
 }
 
 .login-link {
-    color: #ff5900;
+    color: #3b82f6;
     text-decoration: none;
 }
 
@@ -247,7 +247,7 @@ header nav a:hover {
 .media-card h3 {
     margin: 10px 0;
     font-size: 1.5rem;
-    color: #ff5900;
+    color: #3b82f6;
 }
 
 .movie p,
@@ -258,7 +258,7 @@ header nav a:hover {
 }
 
 .read-more {
-    color: #ff5900;
+    color: #3b82f6;
     cursor: pointer;
 }
 
@@ -272,7 +272,7 @@ header nav a:hover {
 
 .movie-rating,
 .media-rating {
-    color: #ff5900;
+    color: #3b82f6;
     font-size: 1.2rem;
     margin-left: 10px;
 }
@@ -280,7 +280,7 @@ header nav a:hover {
 .btn-play-trailer,
 .btn-download,
 .btn-where-to-watch {
-    background-color: #ff5900;
+    background-color: #3b82f6;
     color: #f5f5f5;
     border: none;
     padding: 8px 10px; /* Increased height */
@@ -300,7 +300,7 @@ header nav a:hover {
 }
 
 .btn-where-to-watch:hover {
-    background-color: #bf00ff; /* Dark orange on hover */
+    background-color: #2563eb; /* Deeper blue on hover */
     transform: scale(1.1);
 }
 
@@ -322,7 +322,7 @@ button:active,
 
 /* Load More Button Styles */
 .btn-load-more {
-    background-color: #ff5900;
+    background-color: #3b82f6;
     color: #f5f5f5;
     border: none;
     padding: 15px 30px;
@@ -344,11 +344,11 @@ footer {
     padding: 10px 20px;
     text-align: center;
     font-size: 14px;
-    border-top: 2px solid #ff5900;
+    border-top: 2px solid #3b82f6;
 }
 
 footer a {
-    color: #ff5900;
+    color: #3b82f6;
     text-decoration: none;
 }
 
@@ -368,7 +368,7 @@ footer a:hover {
 
 /* Form Heading */
 .form-container h2 {
-    color: #ff5900;
+    color: #3b82f6;
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
@@ -392,7 +392,7 @@ footer a:hover {
 .form-container button {
     width: 100%;
     padding: 10px;
-    background-color: #ff5900;
+    background-color: #3b82f6;
     border: none;
     color: #f5f5f5;
     font-size: 16px;
@@ -411,7 +411,7 @@ footer a:hover {
     display: block;
     text-align: center;
     margin-top: 11px;
-    color: #ff5900;
+    color: #3b82f6;
     text-decoration: none;
 }
 
@@ -429,7 +429,7 @@ footer a:hover {
 }
 
 .preferences-prompt h2 {
-    color: #ff5900;
+    color: #3b82f6;
     margin-bottom: 20px;
 }
 
@@ -457,7 +457,7 @@ footer a:hover {
 }
 
 .genres-list button:hover {
-    background-color: #ff5900; /* Dark orange on hover */
+    background-color: #3b82f6; /* Minimalist Blue on hover */
     color: #000;
     transform: scale(1.1);
 }
@@ -473,7 +473,7 @@ footer a:hover {
 }
 
 .preferences-prompt button:hover {
-    background-color: #ff5900; /* Dark orange on hover */
+    background-color: #3b82f6; /* Minimalist Blue on hover */
     transform: scale(1.1);
 }
 
@@ -510,10 +510,171 @@ footer a:hover {
 
 .filter-container select:focus {
     outline: none;
-    border-color: #ff5900;
+    border-color: #3b82f6;
 }
 
 .filter-container option:hover {
-    background-color: #ff5900;
+    background-color: #3b82f6;
     color: #000;
+}
+/* Background Slideshow Styles */
+.background-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.slideshow-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.slideshow-image.active {
+    opacity: 0.3; /* Low opacity to keep text readable */
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 20%, #1a1a1a 100%);
+    z-index: -1;
+}
+
+/* Ensure content is above slideshow */
+.header, .footer, .main-content, .form-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Dashboard Section Styles */
+.dashboard-section {
+    margin-bottom: 50px;
+}
+
+.dashboard-section h2 {
+    text-align: left;
+    margin-left: 20px;
+    border-left: 5px solid #3b82f6;
+    padding-left: 15px;
+    font-size: 2rem;
+}
+
+.dashboard-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Adjust media cards for smaller display in sections if needed */
+.media-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #3b82f6 #1a1a1a;
+}
+
+.media-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.media-container::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.media-container::-webkit-scrollbar-thumb {
+    background-color: #3b82f6;
+    border-radius: 10px;
+}
+
+.media-card {
+    min-width: 250px;
+    max-width: 250px;
+    flex-shrink: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    .nav-links {
+        gap: 5px;
+    }
+
+    header nav a {
+        font-size: 14px;
+        padding: 5px 8px;
+    }
+
+    .main-content h1 {
+        font-size: 2rem;
+    }
+
+    .main-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .movies, .media-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .media-card {
+        min-width: 160px;
+        max-width: 160px;
+    }
+
+    .media-details h3 {
+        font-size: 1rem;
+    }
+
+    .media-details p {
+        font-size: 0.8rem;
+    }
+
+    .media-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .btn-play-trailer, .btn-download, .btn-where-to-watch {
+        width: 100%;
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+
+/* Image Optimization */
+img {
+    padding: lazy;
+    background-color: #1a1a1a; /* Placeholder background */
+}
+
+/* Optimize image display for cards */
+.media-card img {
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.media-card h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

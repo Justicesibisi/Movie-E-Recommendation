@@ -9,15 +9,12 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const navigate = useNavigate();
 
-    const handleRegister = async (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        try {
-            await axios.post('http://localhost:5000/api/auth/register', { email, password, username });
-            alert('Registration successful! Redirecting to login...');
-            navigate('/login');
-        } catch (error) {
-            alert('Registration failed, please try again.');
-        }
+        // Mock registration
+        localStorage.setItem('user', JSON.stringify({ username, email }));
+        alert('Registration successful! Redirecting to login...');
+        navigate('/login');
     };
 
     return (

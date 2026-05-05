@@ -8,7 +8,8 @@ import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
-import axios from 'axios';
+import BackgroundSlideshow from './BackgroundSlideshow';
+import tmdbService from './api/tmdbService';
 import './styles.css';
 
 function App() {
@@ -18,37 +19,44 @@ function App() {
     const [preferences, setPreferences] = useState([]);
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setUser({ token });
+            // Load user data if available
+            const userData = localStorage.getItem('user');
+            if (userData) {
+                setUser(prev => ({ ...prev, ...JSON.parse(userData) }));
+            }
+        }
+    }, []);
+
+    useEffect(() => {
         if (!user) {
-            axios.get('/api/movies')
-                .then((res) => setPopularMovies(res.data))
+            tmdbService.getMovies()
+                .then((data) => setPopularMovies(data))
                 .catch((err) => console.error(err));
         }
     }, [user]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setUser({ token });
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-            axios.get('/api/movies/categories')
-                .then((res) => {
-                    setCategories(res.data.categories);
-                    setPreferences(res.data.preferences);
-                })
-                .catch((err) => console.error(err));
-        }
+        tmdbService.getCategories()
+            .then((data) => {
+                setCategories(data);
+                const savedPrefs = JSON.parse(localStorage.getItem('preferences') || '[]');
+                setPreferences(savedPrefs);
+            })
+            .catch((err) => console.error(err));
     }, []);
 
     const handleSetPreferences = (newPreferences) => {
-        axios.post('/api/movies/preferences', { preferences: newPreferences })
-            .then((res) => setPreferences(res.data.preferences))
-            .catch((err) => console.error(err));
+        setPreferences(newPreferences);
+        localStorage.setItem('preferences', JSON.stringify(newPreferences));
     };
 
     return (
         <Router>
-            <Header />
+            <BackgroundSlideshow />
+            <Header user={user} setUser={setUser} />
             <Routes>
                 <Route
                     path="/"

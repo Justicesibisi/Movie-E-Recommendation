@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import tmdbService from '../api/tmdbService';
 import '../styles.css';
 
 const Home = () => {
@@ -13,16 +13,16 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/movies/movies'); // API URL
-                setMovies(response.data);
+                const data = await tmdbService.getMovies();
+                setMovies(data);
             } catch (err) {
                 setError(err.message);
             }
         };
 
         // Check login status
-        const token = localStorage.getItem('authToken');
-        setLoggedIn(!!token); // Set logged-in state based on token presence
+        const token = localStorage.getItem('token'); // Matching App.js token key
+        setLoggedIn(!!token);
 
         fetchMovies();
     }, []);
@@ -31,12 +31,8 @@ const Home = () => {
         if (loggedIn) {
             const fetchCategories = async () => {
                 try {
-                    const response = await axios.get('http://localhost:5000/api/movies/categories', {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                        }
-                    });
-                    setCategories(response.data.categories);
+                    const data = await tmdbService.getCategories();
+                    setCategories(data);
                 } catch (err) {
                     setError(err.message);
                 }
@@ -69,7 +65,7 @@ const Home = () => {
 
     return (
         <div className="main-content">
-            <h1>Popular Movies</h1>
+            <h1>Featured Movies</h1>
             {error && <p className="error-message">{error}</p>}
             <div className="movies">
                 {movies.map((movie) => (
@@ -80,8 +76,8 @@ const Home = () => {
                             <p>
                                 {expandedDescriptions[movie.id]
                                     ? movie.description
-                                    : truncateDescription(movie.description || 'No description available', 100)}
-                                {movie.description && movie.description.length > 100 && (
+                                    : truncateDescription(movie.description || 'No description available', 80)}
+                                {movie.description && movie.description.length > 80 && (
                                     <span
                                         className="read-more"
                                         onClick={() => toggleDescription(movie.id)}
@@ -110,9 +106,13 @@ const Home = () => {
                     </div>
                 ))}
             </div>
-            {!loggedIn && (
+            {!loggedIn ? (
                 <p className="login-prompt">
                     Please <a href="/login" className="login-link">log in</a> to view personalized content and set your preferences.
+                </p>
+            ) : (
+                <p className="login-prompt">
+                    Welcome back! Check your <a href="/dashboard" className="login-link">Dashboard</a> for more.
                 </p>
             )}
         </div>

@@ -14,26 +14,20 @@ const Profile = () => {
 
     // Fetch user data and preferences
     useEffect(() => {
-        const fetchUserData = async () => {
-            const token = localStorage.getItem('token'); // Retrieve token from localStorage
+        const fetchUserData = () => {
+            const token = localStorage.getItem('token');
 
             if (!token) {
-                navigate('/login'); // Redirect to login if no token
+                navigate('/login');
                 return;
             }
 
-            try {
-                const response = await axios.get('http://localhost:5000/api/auth/profile', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+            // Mock user data from token or storage
+            const mockUser = JSON.parse(localStorage.getItem('user') || '{"username": "Guest User", "email": "guest@example.com"}');
+            const savedPrefs = JSON.parse(localStorage.getItem('preferences') || '{"genres": [], "language": "English"}');
 
-                setUser(response.data.user); // Set user data
-                setPreferences(response.data.user.preferences || { genres: [], language: '' }); // Set preferences
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-                localStorage.removeItem('token'); // Remove invalid token
-                navigate('/login'); // Redirect to login
-            }
+            setUser(mockUser);
+            setPreferences(savedPrefs);
         };
 
         fetchUserData();
@@ -45,20 +39,10 @@ const Profile = () => {
     }, []);
 
     // Handle form submission to update preferences
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
-
-        try {
-            await axios.put(
-                'http://localhost:5000/api/user/preferences', // Endpoint for updating preferences
-                preferences,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            setSuccessMessage('Preferences updated successfully!'); // Show success message
-        } catch (err) {
-            console.error('Error updating preferences:', err);
-        }
+        localStorage.setItem('preferences', JSON.stringify(preferences));
+        setSuccessMessage('Preferences updated successfully!');
     };
 
     // Handle input changes for preferences
